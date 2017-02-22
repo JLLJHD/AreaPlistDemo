@@ -30,25 +30,25 @@
     
     //1. 获取省份
     [self.rootArray enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        [self.arrayProvince addObject:obj[@"state"]];
+        [self.arrayProvince addObject:obj];//获取省名 obj[@"state"]
     }];
 
     //2. 随便获取一个省的城市
-    NSMutableArray *citys = [NSMutableArray arrayWithArray:[self.rootArray objectAtIndex:12][@"cities"]];
+    NSMutableArray *citys = [NSMutableArray arrayWithArray:[self.arrayProvince objectAtIndex:12][@"cities"]];
     [citys enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        [self.arrayCity addObject:obj[@"city"]];
+        [self.arrayCity addObject:obj];//获取市名 obj[@"city"]
     }];
     
     //3. 随便获取一个城市的（县，区，等）
-    NSMutableDictionary *countyDic = [NSMutableDictionary dictionaryWithDictionary:citys[0][@"areas"]];
-    [countyDic enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
-        [self.arrayArea addObject:key];
+    NSMutableArray *countyAry = [NSMutableArray arrayWithArray:self.arrayCity[0][@"areas"]];
+    [countyAry enumerateObjectsUsingBlock:^(NSDictionary *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [self.arrayArea addObject:obj];//获取区名字  obj[@"county"]
     }];
     
     //4. 随便获取一个（县，区，等）的（街道，乡，等）
-    [countyDic enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, NSArray *obj, BOOL * _Nonnull stop) {
-        [self.arrayStreets addObjectsFromArray:obj];
-        *stop = YES;
+    NSMutableArray *streetsAry = [NSMutableArray arrayWithArray:[self.arrayArea firstObject][@"streets"]];
+    [streetsAry enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [self.arrayStreets addObject:obj];
     }];
 }
 
